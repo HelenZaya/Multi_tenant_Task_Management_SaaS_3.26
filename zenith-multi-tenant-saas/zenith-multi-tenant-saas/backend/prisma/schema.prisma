@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+enum CardStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+model User {
+  id            String         @id @default(cuid())
+  name          String
+  email         String         @unique
+  passwordHash  String
+  refreshToken  String?
+  memberships   Membership[]
+  assignedCards Card[]         @relation("CardAssignee")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model Organization {
+  id          String       @id @default(cuid())
+  name        String
+  memberships Membership[]
+  workspaces  Workspace[]
+  createdAt   DateTime     @default(now())
+}
+
+model Membership {
+  id             String       @id @default(cuid())
+  userId         String
+  organizationId String
+  role           Role         @default(MEMBER)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organizationId])
+  @@index([organizationId, role])
+}
+
+model Workspace {
+  id             String       @id @default(cuid())
+  name           String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  boards         Board[]
+  createdAt      DateTime     @default(now())
+
+  @@index([organizationId])
+}
+
+model Board {
+  id          String    @id @default(cuid())
+  name        String
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  lists       List[]
+  cards       Card[]
+  createdAt   DateTime  @default(now())
+
+  @@index([workspaceId])
+}
+
+model List {
+  id        String   @id @default(cuid())
+  name      String
+  boardId   String
+  position  Decimal
+  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  cards     Card[]
+  createdAt DateTime @default(now())
+
+  @@index([boardId, position])
+}
+
+model Card {
+  id          String      @id @default(cuid())
+  title       String
+  description String?
+  label       String?
+  deadline    DateTime?
+  status      CardStatus  @default(TODO)
+  position    Decimal
+  boardId     String
+  listId      String
+  assigneeId  String?
+  organizationId String
+  board       Board       @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  list        List        @relation(fields: [listId], references: [id], onDelete: Cascade)
+  assignee    User?       @relation("CardAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([boardId, listId, position])
+  @@index([organizationId, assigneeId, deadline])
+}
