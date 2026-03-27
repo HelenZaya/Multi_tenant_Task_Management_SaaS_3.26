@@ -1,0 +1,23 @@
+{
+  "name": "taskflow",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Enterprise Multi-tenant Task Management SaaS Backend",
+  "scripts": {
+    "build": "corepack pnpm -r --workspace-concurrency=1 run build",
+    "dev": "corepack pnpm -r --parallel run dev",
+    "lint": "corepack pnpm -r run lint",
+    "clean": "corepack pnpm -r run clean",
+    "typecheck": "corepack pnpm -r --workspace-concurrency=1 run typecheck",
+    "test": "corepack pnpm -r --workspace-concurrency=1 run test",
+    "docker:up": "docker-compose -f infra/docker/docker-compose.yml up --build",
+    "docker:down": "docker-compose -f infra/docker/docker-compose.yml down -v",
+    "migrate": "tsx packages/db/src/run-migrate.ts",
+    "migrate:dir": "tsx packages/db/src/run-migrate.ts",
+    "seed": "tsx packages/db/src/seed.ts"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  }
+}

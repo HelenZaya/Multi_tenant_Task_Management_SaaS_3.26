@@ -1,0 +1,15 @@
+{
+  "name": "enterprise-task-worker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/worker.js"
+  },
+  "dependencies": {
+    "bullmq": "^5.47.2",
+    "dotenv": "^16.4.7",
+    "ioredis": "^5.4.2",
+    "pino": "^9.6.0"
+  }
+}

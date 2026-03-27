@@ -1,0 +1,43 @@
+name: ci-cd
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install backend
+        run: npm install
+        working-directory: backend
+      - name: Generate Prisma client
+        run: npm run prisma:generate
+        working-directory: backend
+      - name: Build backend
+        run: npm run build
+        working-directory: backend
+      - name: Install frontend
+        run: npm install
+        working-directory: frontend
+      - name: Build frontend
+        run: npm run build
+        working-directory: frontend
+      - name: Install gateway
+        run: npm install
+        working-directory: gateway
+      - name: Install services
+        run: npm install
+        working-directory: services
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deploy frontend to Vercel, backend to Railway, DB to Neon, Redis to Railway/Render."

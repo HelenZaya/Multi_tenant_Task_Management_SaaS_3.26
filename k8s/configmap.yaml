@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: task-saas-config
+  namespace: task-saas
+data:
+  NODE_ENV: production
+  FRONTEND_ORIGIN: https://task.example.com
+  GATEWAY_ORIGIN: https://task.example.com
+  BACKEND_URL: http://backend:4000
+  REDIS_URL: redis://redis:6379
+  SWAGGER_SERVER_URL: https://task.example.com/api/v1

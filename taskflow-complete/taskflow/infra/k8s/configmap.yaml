@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: taskflow-config
+  namespace: taskflow
+data:
+  NODE_ENV: "production"
+  LOG_LEVEL: "info"
+  CORS_ORIGIN: "https://app.taskflow.io"
+  API_GATEWAY_PORT: "3000"
+  AUTH_SERVICE_PORT: "3001"
+  TENANT_SERVICE_PORT: "3002"
+  PROJECT_SERVICE_PORT: "3003"
+  TASK_SERVICE_PORT: "3004"
+  REALTIME_SERVICE_PORT: "3005"
+  NOTIFICATION_SERVICE_PORT: "3006"
+  ANALYTICS_SERVICE_PORT: "3007"
+  BILLING_SERVICE_PORT: "3008"
+  WORKER_SERVICE_PORT: "3009"
+  DATABASE_POOL_MIN: "2"
+  DATABASE_POOL_MAX: "20"

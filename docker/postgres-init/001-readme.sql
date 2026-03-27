@@ -1,0 +1,1 @@
+-- Optional bootstrap hook for PostgreSQL. RLS can be enabled later through migrations.
